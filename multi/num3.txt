@@ -1,0 +1,134 @@
+section .text
+
+global _start         ;must be declared for using gcc
+
+_start:       ;tell linker entry point
+
+mov eax, 4
+mov ebx, 1
+mov ecx, msg2
+mov edx, len2
+int 80h
+
+;1st num
+mov eax, 4
+mov ebx, 1
+mov ecx, msg3
+mov edx, len3
+int 80h
+
+mov eax, 3
+mov ebx, 2
+mov ecx, num1
+mov edx, 2
+int 80h
+
+;2nd num
+mov eax, 4
+mov ebx, 1
+mov ecx, msg4
+mov edx, len4
+int 80h
+
+mov eax, 3
+mov ebx, 2
+mov ecx, num2
+mov edx, 2
+int 80h
+
+;checker
+mov   ecx, [num1]
+cmp   ecx, [num2]
+jg    _exit
+
+xor ecx, ecx
+mov ecx, [num2]
+mov   [largest], ecx
+mov   ecx,msg
+
+mov   edx, len
+mov   ebx,1 ;file descriptor (stdout)
+mov   eax,4;systemcall number (sys_write)
+int   0x80;call kernel
+
+mov   ecx,largest
+mov   edx, 2
+mov   ebx,1;file descriptor (stdout)
+mov   eax,4;system call number (sys_write)
+int   0x80;call kernel
+
+;smallest
+mov ecx, [num1]
+mov [smallest], ecx
+
+mov eax, 4
+mov ebx, 1
+mov ecx, msg1
+mov edx, len1
+int 80h
+
+mov ecx, smallest
+mov edx, 2
+mov ebx, 1
+mov eax, 4
+int 80h
+
+mov   eax, 1
+int   80h
+
+_exit:
+mov   [largest], ecx
+mov   ecx,msg
+mov   edx, len
+mov   ebx,1 ;file descriptor (stdout)
+mov   eax,4;systemcall number (sys_write)
+int   0x80;call kernel
+
+mov   ecx,largest
+mov   edx, 2
+mov   ebx,1;file descriptor (stdout)
+mov   eax,4;system call number (sys_write)
+int   0x80;call kernel
+
+;smallest
+
+mov ecx, [num2]
+mov [smallest], ecx
+
+mov eax, 4
+mov ebx, 1
+mov ecx, msg1
+mov edx, len1
+int 80h
+
+mov ecx, smallest
+mov edx, 2
+mov ebx, 1
+mov eax, 4
+int 80h
+
+mov   eax, 1
+int   80h
+
+ret
+
+section .data
+msg db "The largest digit is: "
+len equ $-msg 
+msg1 db 10,"The smallest digit is: "
+len1 equ $-msg1
+
+msg2 db "Input two numbers: ", 10
+len2 equ $-msg2
+
+msg3 db "1st number: "
+len3 equ $-msg3
+
+msg4 db "2nd number: "
+len4 equ $-msg4
+
+segment .bss
+num1 resb 2
+num2 resb 2
+largest resb 2
+smallest resb 2

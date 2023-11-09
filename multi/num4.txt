@@ -1,0 +1,130 @@
+section .text
+
+global _start         ;must be declared for using gcc
+
+_start:       ;tell linker entry point
+
+mov eax, 4
+mov ebx, 1
+mov ecx, msg2
+mov edx, len2
+int 80h
+
+;1st num
+mov eax, 4
+mov ebx, 1
+mov ecx, msg3
+mov edx, len3
+int 80h
+
+mov eax, 3
+mov ebx, 2
+mov ecx, num1
+mov edx, 2
+int 80h
+
+;2nd num
+mov eax, 4
+mov ebx, 1
+mov ecx, msg4
+mov edx, len4
+int 80h
+
+mov eax, 3
+mov ebx, 2
+mov ecx, num2
+mov edx, 2
+int 80h
+
+;3rd num
+mov eax, 4
+mov ebx, 1
+mov ecx, msg5
+mov edx, len5
+int 80h
+
+mov eax, 3
+mov ebx, 2
+mov ecx, num3
+mov edx, 2
+int 80h
+
+;checker
+  mov ecx,[num1]
+  cmp ecx,[num2]
+  jge _checker
+  mov ecx,[num2]
+  
+_checker:
+  cmp ecx,[num3]
+  jge _print1
+  mov ecx,[num3]
+  
+_print1:
+  mov [largest],ecx
+  
+  mov eax,4
+  mov ebx,1
+  mov ecx,msg
+  mov edx,len 
+  int 0x80
+  
+  mov eax,4
+  mov ebx,1 
+  mov ecx, largest 
+  mov edx, 2 
+  int 0x80
+  
+;smallest
+  mov ecx,[num1]
+  cmp ecx,[num2]
+  jle _checker1
+  mov ecx,[num2]
+  
+_checker1:
+  cmp ecx,[num3]
+  jle _print2
+  mov ecx,[num3]
+  
+_print2:
+  mov [smallest],ecx
+  
+  mov eax, 4
+  mov ebx, 1
+  mov ecx, msg1
+  mov edx, len1 
+  int 0x80
+  
+  mov eax,4
+  mov ebx,1 
+  mov ecx, smallest 
+  mov edx, 2 
+  int 0x80
+  
+  mov eax,1
+  int 0x80
+
+section .data
+msg db "The largest digit is: "
+len equ $-msg 
+msg1 db 10,"The smallest digit is: "
+len1 equ $-msg1
+
+msg2 db "Input three numbers: ", 10
+len2 equ $-msg2
+
+msg3 db "1st number: "
+len3 equ $-msg3
+
+msg4 db "2nd number: "
+len4 equ $-msg4
+
+msg5 db "3rd number: "
+len5 equ $-msg5
+
+segment .bss
+num1 resb 2
+num2 resb 2
+num3 resb 2
+largest resb 2
+smallest resb 2

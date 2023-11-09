@@ -1,0 +1,52 @@
+section	.text
+	global _start       ;must be declared for using gcc
+_start:                     ;tell linker entry point
+ 
+    
+    mov ecx, 10  
+    mov eax, '1' 
+ 
+    l1:
+    call hashtagPrint
+    loop l1
+ 
+    call exit
+ 
+hashtagPrint:
+    mov eax, 4
+    mov ebx, 1
+    push ecx
+ 
+    mov ecx, hashtag
+    mov edx, len1
+    int 80h
+ 
+    pop ecx
+ 
+    ret
+ 
+spacer:
+    mov eax, 4
+    mov ebx, 1
+    push ecx
+    mov ecx, space
+    mov edx, 1
+    int 80h
+    pop ecx
+    ret
+ 
+ 
+exit:
+    mov eax, 1
+    mov ebx, 0
+    int 80h
+    ret
+ 
+section	.data
+ 
+hashtag db "###########",10
+len1 equ $-hashtag
+ 
+ 
+space db 10
+blank db ' '

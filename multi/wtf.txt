@@ -1,0 +1,41 @@
+section .data
+msg db "largest: "
+len equ $-msg 
+msg1 db 10,"smallest: "
+len1 equ $-msg1 
+num1 dd '9'
+num2 dd '11'
+num3 dd '15'
+segment .bss
+largest resb 2
+smallest resb 2
+ 
+section .text
+global _start
+_start:
+  mov ecx,[num1]
+  cmp ecx,[num2]
+  jg _third
+  mov ecx,[num2]
+  jmp _third
+_third:
+  cmp ecx,[num3]
+  jg _print1
+  mov ecx,[num3]
+  jmp _print1
+_print1:
+  mov [largest],ecx
+  mov eax,4
+  mov ebx,1
+  mov ecx,msg
+  mov edx,len 
+  int 0x80
+  mov eax,4
+  mov ebx,1 
+  mov ecx, largest 
+  mov edx, 2 
+  int 0x80
+  call _exit
+_exit:
+  mov eax,1
+  int 0x80

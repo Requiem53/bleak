@@ -1,0 +1,59 @@
+section .data
+
+num1  dw 1
+num2  dw 3
+num3  dw 8
+num4  dw 5
+msg db "test"
+
+section .text 
+    global _start
+    
+section .bss
+largest resb 2
+smallest resb 2
+
+_start: 
+       mov eax,0       
+       mov ecx,3 
+       mov esi,num1
+       mov ax, [esi]   
+       mov dx, [esi]    
+       add esi,2
+
+again: 
+       cmp ax,[esi]
+       jg isSmaller
+       mov ax,[esi]
+
+isSmaller: 
+        cmp dx, [esi]
+        jl cont
+        mov dx, [esi]
+
+cont: 
+      add esi,2
+      dec ecx
+      cmp ecx,0
+      jnz again
+
+mov [largest], ax
+mov [smallest], dx
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, largest
+mov edx, 2
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, smallest
+mov edx, 2
+int 80h
+
+exit: 
+      mov eax,1   
+      mov ebx,0
+      int 80h
